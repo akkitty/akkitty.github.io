@@ -1,0 +1,1280 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <!--====== Title ======-->
+    <title>(W)Hoose Hero)</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--====== Tab Icon ======-->
+    <link rel="shortcut icon" href="assets/images/nil sine labear cheering.png" type="image/png">
+
+    <!--====== Animate CSS ======-->
+    <link rel="stylesheet" href="assets/css/animate.css">
+
+    <!--====== Line Icons CSS ======-->
+    <link rel="stylesheet" href="assets/css/LineIcons.2.0.css">
+
+    <!--====== Bootstrap CSS ======-->
+    <link rel="stylesheet" href="assets/css/bootstrap-4.5.0.min.css">
+
+    <!--====== Default CSS ======-->
+    <link rel="stylesheet" href="assets/css/default.css">
+
+    <!--====== Style CSS ======-->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Website Template ends here -->
+
+    <!-- Game metadata Starts Here -->
+
+    <!-- Load style sheets -->
+    <link rel="stylesheet" href="assets/CandyCrush/mainLayout.css">
+
+    <!-- Use mobile-aware viewport -->
+    <meta name="viewport" content=
+      "width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Load any supplemental Javascript libraries here -->
+    <script src=
+      "assets/js/vendor/jquery-3.5.1-min.js"></script>
+    <script src=
+      "https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.2/seedrandom.js">
+    </script>
+    <script src="assets/CandyCrush/candy.js"></script>
+    <script src="assets/CandyCrush/board.js"></script>
+    <script src="assets/CandyCrush/rules.js"></script>
+    <script src="assets/CandyCrush/table.js"></script>
+    <script>
+
+    // By default, the first board loaded by your page will be the same
+    // each time you load (which is accomplished by "seeding" the random
+    // number generator. This makes testing (and grading!) easier!
+    Math.seedrandom(0);
+
+
+    // A short jQuery extension to read query parameters from the URL.
+    $.extend({
+      getUrlVars: function() {
+        var vars = [], pair;
+        var pairs = window.location.search.substr(1).split('&');
+        for (var i = 0; i < pairs.length; i++) {
+          pair = pairs[i].split('=');
+          vars.push(pair[0]);
+          vars[pair[0]] = pair[1] &&
+              decodeURIComponent(pair[1].replace(/\+/g, ' '));
+        }
+        return vars;
+      },
+      getUrlVar: function(name) {
+        return $.getUrlVars()[name];
+      }
+    });
+
+    // constants
+    var DEFAULT_BOARD_SIZE = 8;
+
+    // data model at global scope for easier debugging
+    var board;
+    var rules;
+    var col_array = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+    var inputBoxInfo;
+    var validInput = false;
+    var image_array;
+    var BOARD_SIZE;
+    var globalCrushCounter = true;
+    var mouseDownLocation;
+    var mouseUpLocation;
+
+    // initialize board
+    if ($.getUrlVar('size') && $.getUrlVar('size') >= 3) {
+      board = new Board($.getUrlVar('size'));
+      BOARD_SIZE = $.getUrlVar('size');
+    } else {
+      board = new Board(DEFAULT_BOARD_SIZE);
+      BOARD_SIZE = DEFAULT_BOARD_SIZE;
+    }
+
+    // load a rule
+    rules = new Rules(board);
+
+    // Final initialization entry point: the Javascript code inside this block
+    // runs at the end of start-up when the page has finished loading.
+    $(document).ready(function()
+    {
+      // Your code here.
+    });
+
+
+    /* Event Handlers */
+    // access the candy object with info.candy
+
+    // add a candy to the board
+    $(board).on('add', function(e, info)
+    {
+      // Your code here.
+    });
+
+    // move a candy on the board
+    $(board).on('move', function(e, info)
+    {
+      // Your code here.
+    });
+
+    // remove a candy from the board
+    $(board).on('remove', function(e, info)
+    {
+      // Your code here.
+      // var candy = info.candy;
+      // console.log('candy remved');
+      // // console.log(candy);
+
+      // $('info').fadeOut('slow');
+
+    });
+
+    // move a candy on the board
+    $(board).on('scoreUpdate', function(e, info)
+    {
+      // Your code here. To be implemented in pset 2.
+      $("#score").html(board.getScore());
+    });
+
+    // keyboard events arrive here
+    $(document).on('keydown', function(evt) {
+      // Your code here.
+    });
+
+    // Button Events
+    $(document).on('click', "#newGame", function(evt)
+    {
+      rules.cleanBoard();
+      rules.prepareNewGame();
+      $("#mainColumn").html(drawBoard());
+      board.resetScore();
+
+      clearInterval(t)
+      timeLeft = 20
+
+      t = setInterval(function(){
+      document.getElementById('timeCount').innerHTML = timeLeft;
+      timeLeft -= 1
+      if (timeLeft < 0) {
+        clearInterval(t)
+        }
+      },1000);
+
+    });
+
+
+    $(document).keypress(function(evt){
+      if(evt.which == 13){
+        checkInput();
+      }
+    });
+
+    function checkInput(){
+        inputBoxInfo = document.getElementById('inputBox').value;
+        // console.log(inputBoxInfo.length);
+        if(inputBoxInfo.length <= 3){
+          var bool1 = col_array.indexOf(inputBoxInfo.charAt(0)) != -1;
+          var bool2 = (Number(inputBoxInfo.charAt(1))>0 && Number(inputBoxInfo.charAt(1))<=20);
+          if(bool1 && bool2){
+            validInput = true;
+            var counter = 0;
+            if(avaliableMove('up')) {
+              document.getElementById('up').disabled = false;
+              counter++;
+            }
+            if(avaliableMove('left')) {
+              document.getElementById('left').disabled = false;
+              counter++;
+            }
+            if(avaliableMove('right')) {
+              document.getElementById('right').disabled = false;
+              counter++;
+            }
+            if(avaliableMove('down')) {
+              document.getElementById('down').disabled = false;
+              counter++;
+            }
+            if(counter>0)
+              return;
+          }
+        }
+        // console.log("hello");
+        document.getElementById('inputBox').value = null;
+        document.getElementById('inputBox').focus();
+        document.getElementById('up').disabled = true;
+        document.getElementById('left').disabled = true;
+        document.getElementById('right').disabled = true;
+        document.getElementById('down').disabled = true;
+    }
+
+    // $(document).on('focusout', "#inputBox", function(evt){
+    //   checkInput();
+    // });
+
+    $(document).on('click', "#up", function(evt){
+      if(validInput)
+        checkMove('up');
+    });
+
+    $(document).on('click', "#left", function(evt){
+      if(validInput)
+        checkMove('left');
+    });
+
+    $(document).on('click', "#right", function(evt){
+      if(validInput)
+        checkMove('right');
+    });
+
+    $(document).on('click', "#down", function(evt){
+      if(validInput)
+        checkMove('down');
+    });
+
+    function avaliableMove(dir){
+      //old implementation
+      // var inputCol = col_array.indexOf(inputBoxInfo.charAt(0));
+      // var inputRow;
+      // if(inputBoxInfo.length < 3)
+      //  inputRow = Number(inputBoxInfo.charAt(1))-1;
+      // else {
+      //   var temp = inputBoxInfo.charAt(1) + inputBoxInfo.charAt(2);
+      //   inputRow = Number(temp) -1;
+      // }
+      // var currCandy = board.getCandyAt(inputRow, inputCol);
+      // var bool = rules.isMoveTypeValid(currCandy,dir);
+      // return bool;
+
+      var inputCol = col_array.indexOf(mouseDownLocation.charAt(0));
+      var inputRow;
+      if(mouseDownLocation.length < 3)
+       inputRow = Number(mouseDownLocation.charAt(1))-1;
+      else {
+        var temp = mouseDownLocation.charAt(1) + mouseDownLocation.charAt(2);
+        inputRow = Number(temp) -1;
+      }
+      var currCandy = board.getCandyAt(inputRow, inputCol);
+      var bool = rules.isMoveTypeValid(currCandy,dir);
+      return bool;
+    }
+
+    /* Add basic behaivor to gameplay
+    * because this game is stupid
+    */
+    function checkMove(dir){
+      // var inputCol = col_array.indexOf(inputBoxInfo.charAt(0));
+      // var inputRow;
+      // if(inputBoxInfo.length < 3)
+      //  inputRow = Number(inputBoxInfo.charAt(1))-1;
+      // else {
+      //   var temp = inputBoxInfo.charAt(1) + inputBoxInfo.charAt(2);
+      //   inputRow = Number(temp) -1;
+      // }
+      console.log(mouseDownLocation);
+      console.log(mouseUpLocation);
+      var inputRow;
+      var inputCol = col_array.indexOf(mouseDownLocation.charAt(0));
+      if(mouseDownLocation.length < 3)
+       inputRow = Number(mouseDownLocation.charAt(1))-1;
+      else {
+        var temp = mouseDownLocation.charAt(1) + mouseDownLocation.charAt(2);
+        inputRow = Number(temp) -1;
+      }
+      var currCandy = board.getCandyAt(inputRow, inputCol);
+      var bool = rules.isMoveTypeValid(currCandy,dir);
+      var canvas = document.getElementById('Canvas');
+      ctxt = canvas.getContext('2d');
+      var candyTo = board.getCandyInDirection(currCandy, dir);
+      var size = (480/board.getSize());
+
+      var clearWidth, clearHeight;
+
+      var destRow, destCol, originRow, originCol;
+
+      if(dir == 'right' || dir == 'left'){
+        clearWidth = size*2;
+        clearHeight = size;
+        var originColor, destColor;
+        if(currCandy.col > candyTo.col){
+          destCol = currCandy.col*size;
+          originCol = candyTo.col*size;
+          originColor = candyTo.color;
+          destColor = currCandy.color;
+        }
+        else{
+          destCol = candyTo.col*size;
+          originCol = currCandy.col*size;
+          originColor = currCandy.color;
+          destColor= candyTo.color;
+        }
+        destRow = candyTo.row*size;
+        originRow = currCandy.row*size;
+        var timer = 0;
+
+        var inter = setInterval(function(){
+          // console.log('switching here');
+          ctxt.clearRect(originCol, originRow, clearWidth, clearHeight);
+
+          ctxt.drawImage(document.getElementById(originColor + '-candy'), originCol+timer*size/20, originRow, size, size);
+          ctxt.drawImage(document.getElementById(destColor + '-candy'), destCol-timer*size/20, destRow, size, size);
+
+          timer++;
+          // console.log(timer);
+          if(timer == 21){
+            clearInterval(inter);
+            flipAndDraw(currCandy, dir);
+          }
+        }, 10);
+      }
+
+      else{
+        clearWidth = size;
+        clearHeight = size*2;
+        if(currCandy.row > candyTo.row){
+          destRow = currCandy.row*size;
+          originRow = candyTo.row*size;
+          originColor = candyTo.color;
+          destColor = currCandy.color;
+        }
+        else{
+          destRow = candyTo.row*size;
+          originRow = currCandy.row*size;
+          originColor = currCandy.color;
+          destColor= candyTo.color;
+        }
+        destCol = candyTo.col*size;
+        originCol = currCandy.col*size;
+        var timer = 0;
+
+        var inter = setInterval(function(){
+          ctxt.clearRect(originCol, originRow, clearWidth, clearHeight);
+
+          ctxt.drawImage(document.getElementById(originColor + '-candy'), originCol, originRow+timer*size/20, size, size);
+          ctxt.drawImage(document.getElementById(destColor + '-candy'), destCol, destRow-timer*size/20, size, size);
+
+          timer++;
+
+        // console.log(timer);
+          if(timer == 21){
+            clearInterval(inter);
+            flipAndDraw(currCandy, dir);
+          }
+
+        }, 10);
+      }
+
+    }
+
+    function flipAndDraw(currCandy, dir){
+      // console.log(currCandy);
+        board.flipCandies(currCandy, board.getCandyInDirection(currCandy, dir));
+
+        // ctxt.clearRect(0, 0, canvas.width, canvas.height);
+        $("#mainColumn").html(drawBoard());
+
+
+        document.getElementById('inputBox').value = null;
+        document.getElementById('inputBox').focus();
+        validInput = false;
+        document.getElementById('up').disabled = true;
+        document.getElementById('left').disabled = true;
+        document.getElementById('right').disabled = true;
+        document.getElementById('down').disabled = true;
+        document.getElementById('crusher').disabled = false;
+        document.getElementById('inputBox').disabled = true;
+        document.getElementById('Canvas').style.pointerEvents = 'none';
+        document.getElementById('helpBtn').disabled = true;
+
+        var counter = true;
+        crushcrush();
+
+      var gg = setInterval(function(){
+        // console.log(counter);
+        if(globalCrushCounter == true){
+          // console.log(globalCrushCounter);
+          crushcrush();
+        }
+        else{
+          clearInterval(gg);
+          document.getElementById('Canvas').style.pointerEvents = 'auto';
+          document.getElementById('helpBtn').disabled = false;
+
+        }
+      },1100);
+    }
+
+    function crushcrush(){
+
+      var listRemove = rules.getCandyCrushes();
+      var canvas = document.getElementById("Canvas");
+      var cxt = canvas.getContext('2d');
+      var size = (480/board.getSize());
+      var alphaCounter = 10;
+      if(listRemove.length != 0){
+
+        var numCrush = listRemove.length;
+        var crushLength = listRemove[0].length;
+
+        var alpha = setInterval(function(){
+          alphaCounter = alphaCounter - 1;
+          cxt.globalAlpha = alphaCounter/10;
+          // console.log(alphaCounter/10);
+          for(var i = 0; i < numCrush; i++){
+            for(var j = 0; j < crushLength; j++){
+              var color = String(listRemove[i][j].color) + '-candy';
+              var scoreColor = listRemove[i][j].color;
+              ctx.clearRect(listRemove[i][j].col*size, listRemove[i][j].row*size, size, size);
+              cxt.drawImage(document.getElementById(color), listRemove[i][j].col*size, listRemove[i][j].row*size, size, size);
+            }
+          }
+          changeColor(scoreColor);
+          if(alphaCounter <= 0){
+            clearInterval(alpha);
+            // console.log('alpha cleared');
+          }
+        }, 50);
+
+      }
+
+      setTimeout(function(){
+        ctx.globalAlpha = 1.0;
+        rules.removeCrushes(listRemove);
+
+        $("#mainColumn").html(drawBoard());
+        rules.moveCandiesDown();
+
+        $("#mainColumn").html(drawBoard());
+
+
+        listRemove = rules.getCandyCrushes();
+        if(listRemove.length == 0) {
+          document.getElementById('crusher').disabled = true;
+          document.getElementById('inputBox').disabled = false;
+          document.getElementById('inputBox').focus();
+          // console.log('crush false');
+          globalCrushCounter = false;
+        }
+
+        else {
+          document.getElementById('inputBox').disabled = true;
+          // console.log('crush true');
+          globalCrushCounter = true;
+        }
+      },550);
+
+
+    }
+    function getAllCandy(crushList){
+      var candies = [];
+      // console.log(crushList);
+      for(var i=0; i<crushList.length; i++){
+            for(var j=0; j<crushList[i].length; j++){
+              // console.log(candies);
+            }
+      }
+    }
+
+    function changeColor(candy){
+      var colorChange = 'style=background-color:' + candy;
+          switch(colorChange){
+            case 'style=background-color:red':
+              document.getElementById('score').style.backgroundColor = 'red';
+              break;
+            case 'style=background-color:green':
+              document.getElementById('score').style.backgroundColor = 'green';
+              break;
+            case 'style=background-color:blue':
+              document.getElementById('score').style.backgroundColor = 'blue';
+              break;
+            case 'style=background-color:orange':
+              document.getElementById('score').style.backgroundColor = 'orange';
+              break;
+            case 'style=background-color:purple':
+              document.getElementById('score').style.backgroundColor = 'purple';
+              break;
+            case 'style=background-color:yellow':
+              document.getElementById('score').style.backgroundColor = 'yellow';
+              break;
+          }
+    }
+
+    function drawCandy(row, col, size, color){
+      switch(color) {
+                case 'red':
+                  ctx.drawImage(document.getElementById('red-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+                case 'green':
+                  ctx.drawImage(document.getElementById('green-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+                case 'blue':
+                  ctx.drawImage(document.getElementById('blue-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+                case 'orange':
+                  ctx.drawImage(document.getElementById('orange-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+                case 'purple':
+                  ctx.drawImage(document.getElementById('purple-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+                case 'yellow':
+                  ctx.drawImage(document.getElementById('yellow-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+              }
+    }
+
+
+    $(document).on('click', "#helpBtn", function(evt){
+      var helpMove = rules.getRandomValidMove();
+      // console.log(helpMove.candy);
+      // console.log(helpMove.direction);
+      var size = (480/board.getSize());
+      var canvas = document.getElementById("Canvas");
+      var ctx2 = canvas.getContext('2d');
+      ctx2.beginPath();
+      posY = (helpMove.candy.row + 1) * size;
+      posX = helpMove.candy.col*size;
+      ctx2.strokeStyle='black';
+      var arrowSize = size/4;
+      // console.log(arrowSize);
+
+      switch(helpMove.direction) {
+        case 'right':
+          // ctx2.clearRect(0, 0, canvas.width, canvas.height);
+          $("#mainColumn").html(drawBoard());
+          posX = posX + size*1.2;
+          posY = posY - (size/2);
+          ctx2.moveTo(posX, posY);
+          ctx2.lineTo(posX - arrowSize, posY - arrowSize);
+          ctx2.lineTo(posX - arrowSize, posY + arrowSize);
+          ctx2.fill();
+          ctx2.rect(posX-arrowSize*2, posY-arrowSize/2, arrowSize, arrowSize);
+          ctx2.fill();
+          break;
+        case 'left':
+          // ctx2.clearRect(0, 0, canvas.width, canvas.height);
+          $("#mainColumn").html(drawBoard());
+          posX = posX - size/4;
+          posY = posY - size/2;
+          ctx2.moveTo(posX, posY);
+          ctx2.lineTo(posX + arrowSize, posY + arrowSize);
+          ctx2.lineTo(posX + arrowSize, posY - arrowSize);
+          ctx2.fill();
+          ctx2.rect(posX+arrowSize, posY-arrowSize/2, arrowSize, arrowSize);
+          ctx2.fill();
+          break;
+        case 'up':
+          // ctx2.clearRect(0, 0, canvas.width, canvas.height);
+          $("#mainColumn").html(drawBoard());
+          posY = posY - (size*1.2);
+          posX = posX + (size/2);
+          ctx2.moveTo(posX, posY);
+          ctx2.lineTo(posX - arrowSize, posY + arrowSize);
+          ctx2.lineTo(posX + arrowSize, posY + arrowSize);
+          ctx2.fill();
+          ctx2.rect(posX-arrowSize/2, posY+arrowSize, arrowSize, arrowSize);
+          ctx2.fill();
+          break;
+        case 'down':
+          // ctx2.clearRect(0, 0, canvas.width, canvas.height);
+          $("#mainColumn").html(drawBoard());
+          posY = posY + (size/4);
+          posX = posX + (size/2);
+          ctx2.moveTo(posX, posY);
+          ctx2.lineTo(posX + arrowSize, posY - arrowSize);
+          ctx2.lineTo(posX - arrowSize, posY - arrowSize);
+          ctx2.fill();
+          ctx2.rect(posX-arrowSize/2, posY-arrowSize*2, arrowSize, arrowSize);
+          ctx2.fill();
+          break;
+      }
+      ctx2.closePath();
+
+    });
+
+    // $(document).on('click', "#crusher", function(evt){
+    //     var listRemove = rules.getCandyCrushes();
+    //     // console.log(listRemove);
+    //     var candy = listRemove[0][0];
+    //     // console.log(candy);
+    //     var colorChange = 'style=background-color:' + candy;
+    //     switch(colorChange){
+    //       case 'style=background-color:red':
+    //         document.getElementById('score').style.backgroundColor = 'red';
+    //         break;
+    //       case 'style=background-color:green':
+    //         document.getElementById('score').style.backgroundColor = 'green';
+    //         break;
+    //       case 'style=background-color:blue':
+    //         document.getElementById('score').style.backgroundColor = 'blue';
+    //         break;
+    //       case 'style=background-color:orange':
+    //         document.getElementById('score').style.backgroundColor = 'orange';
+    //         break;
+    //       case 'style=background-color:purple':
+    //         document.getElementById('score').style.backgroundColor = 'purple';
+    //         break;
+    //       case 'style=background-color:yellow':
+    //         document.getElementById('score').style.backgroundColor = 'yellow';
+    //         break;
+    //     }
+
+    //     // console.log(colorChange);
+    //     rules.removeCrushes(listRemove);
+
+    //     $("#mainColumn").html(drawBoard());
+
+    //     setTimeout(function(){
+    //       rules.moveCandiesDown();
+    //       $("#mainColumn").html(drawBoard());
+    //       listRemove = rules.getCandyCrushes();
+    //       if(listRemove.length == 0) {
+    //         document.getElementById('crusher').disabled = true;
+    //         document.getElementById('inputBox').disabled = false;
+    //         document.getElementById('inputBox').focus();
+    //       }
+    //       else
+    //         document.getElementById('inputBox').disabled = true;
+    //     }, 500);
+
+    // });
+
+
+    function getCanvasPos(evt) {
+      var canvasRect = document.getElementById('Canvas').getBoundingClientRect();
+
+      //Get relative position on canvas
+      var xPos = (evt.clientX - canvasRect.left);
+      var yPos = (evt.clientY - canvasRect.top);
+
+      //Get coordinate
+      var size = 480/BOARD_SIZE;
+      yPos = Math.floor((yPos / size)) + 1;
+      xPos = Math.floor((xPos / size));
+      xPos = col_array[xPos];
+
+      // console.log({ col: xPos, row: yPos});
+      return xPos + yPos;
+    }
+
+    $(document).on('mousedown', '#Canvas', function(evt){
+      console.log('mousedown');
+      mouseDownLocation = getCanvasPos(evt);
+      console.log('mousedown: ' + mouseDownLocation);
+
+      document.getElementById('inputBox').value = mouseDownLocation;
+    });
+
+    $(document).on('mouseup', '#Canvas', function(evt){
+      console.log('mouseup');
+      mouseUpLocation = getCanvasPos(evt);
+      console.log('mouseUp: ' + mouseUpLocation);
+      clearMoves();
+      $("#mainColumn").html(drawBoard());
+
+      checkDrag();
+    });
+
+    $(document).on('mousemove', '#Canvas', function(evt){
+      console.log('mousemove');
+    });
+
+    $(document).on('mouseout', '#Canvas', function(evt){
+      console.log('mouseout');
+    });
+
+
+    // $(document).on('click', "#Canvas", function(evt) {
+    //   var location = getCanvasPos(evt);
+    //   // console.log(location);
+    //   clearMoves();
+    //   $("#mainColumn").html(drawBoard());
+    //   document.getElementById('inputBox').value = location;
+    //   checkInput(); //Once click it will check for possible moves
+    // });
+
+    function checkDrag() {
+      var originCol = col_array.indexOf(mouseDownLocation.charAt(0));
+      var destCol = col_array.indexOf(mouseUpLocation.charAt(0));
+      var spliceSize = BOARD_SIZE > 9 ? 2 : 1;
+      var originRow = mouseDownLocation.substr(1, spliceSize);
+      var destRow = mouseUpLocation.substr(1, spliceSize);
+      // console.log(originRow);
+      // console.log(destRow);
+      // console.log(mouseDownLocation);
+      // console.log(mouseUpLocation);
+      // console.log(originCol);
+      // console.log(destCol);
+      if(originCol == destCol){
+        //moving up or down
+        if(originRow < destRow){
+          if(avaliableMove('down')){
+            checkMove('down');
+            document.getElementById("invalid").style.visibility = 'hidden';
+          }
+          else
+            document.getElementById("invalid").style.visibility = 'visible';
+        }
+        else{
+          if(avaliableMove('up')){
+            checkMove('up');
+            document.getElementById("invalid").style.visibility = 'hidden';
+          }
+          else
+            document.getElementById("invalid").style.visibility = 'visible';
+        }
+      }
+      else{
+        if(originCol < destCol){
+          if(avaliableMove('right')){
+            checkMove('right');
+            document.getElementById("invalid").style.visibility = 'hidden';
+          }
+          else
+            document.getElementById("invalid").style.visibility = 'visible';
+        }
+        else{
+          if(avaliableMove('left')){
+            checkMove('left');
+            document.getElementById("invalid").style.visibility = 'hidden';
+          }
+          else
+            document.getElementById("invalid").style.visibility = 'visible';
+        }
+        //moving left or right
+      }
+
+    }
+    function clearMoves() {
+      document.getElementById('left').disabled = true;
+      document.getElementById('right').disabled = true;
+      document.getElementById('up').disabled = true;
+      document.getElementById('down').disabled = true;
+    }
+
+    function load_img(imgToLoad) {
+        var loaded = false;
+        var counter = 0;
+        for( var i=0; i<imgToLoad.length; i++){
+            var img = new Image();
+            // console.log(imgToLoad.length);
+            img.onload = function() {
+                counter++;
+                //console.log(imgToLoad[i]);
+                // console.log(counter);
+                if(counter == imgToLoad.length){
+                    loaded = true;
+                    // console.log(loaded);
+                }
+            }
+            img.src = imgToLoad[i];
+            // console.log(img.src);
+            img_array = img;
+
+        }
+        // console.log(loaded);
+        // return img_array;
+    }
+
+    function drawBoard() {
+
+        load_img(['assets/graphics/blue-candy.png', '/graphics/blue-special.png',
+                    'assets/graphics/green-candy.png', './graphics/green-special.png',
+                    'assets/graphics/orange-candy.png', './graphics/orange-special.png',
+                    'assets/graphics/purple-candy.png', './graphics/purple-special.png',
+                    'assets/graphics/red-candy.png', './graphics/red-special.png',
+                    'assets/graphics/yellow-candy.png', './graphics/color-bomb.png']);
+
+        var size = 480/board.getSize();
+        var candyHeight = size;
+        var candyWidth = size;
+
+        // console.log(size);
+        var canvas = document.getElementById('Canvas');
+        ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // ctx.strokeRect(0,0, canvas.width, canvas.height);
+        ctx.strokeStyle="lightgrey";
+
+
+        for(var row = 0; row < BOARD_SIZE; row++){
+          for(var col = 0; col < BOARD_SIZE; col++) {
+              var colorBack =  board.getCandyAt(row, col);
+              var color = "style=background-color:" + colorBack;
+
+              switch(color) {
+                case 'style=background-color:red':
+                  // ctx.globalAlpha = .5;
+                  ctx.drawImage(document.getElementById('red-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  // ctx.globalAlpha = 1.0;
+                  break;
+                case 'style=background-color:green':
+                  ctx.drawImage(document.getElementById('green-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+                case 'style=background-color:blue':
+                  ctx.drawImage(document.getElementById('blue-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+                case 'style=background-color:orange':
+                  ctx.drawImage(document.getElementById('orange-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+                case 'style=background-color:purple':
+                  ctx.drawImage(document.getElementById('purple-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+                case 'style=background-color:yellow':
+                  ctx.drawImage(document.getElementById('yellow-candy'), col*size, row*size, candyWidth, candyHeight);
+                  ctx.strokeRect(col*size, row*size, candyWidth, candyHeight);
+                  break;
+              }
+              // ctx.drawImage(document.getElementById('green-candy'), row, col, (320/8), (320/8));
+              // ctx.drawImage(document.getElementById('orange-candy'),row, col, 20,10);
+          }
+        }
+      var canvas2 = document.getElementById('candyCanvas1');
+      cntxt = canvas2.getContext('2d');
+      cntxt.fillRect(0,0,200,200);
+    }
+
+
+
+    </script>
+
+
+
+</head>
+
+<body>
+    <!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+
+    <!--====== PRELOADER PART START ======-->
+
+    <div class="preloader">
+        <div class="loader">
+            <div class="ytp-spinner">
+                <div class="ytp-spinner-container">
+                    <div class="ytp-spinner-rotator">
+                        <div class="ytp-spinner-left">
+                            <div class="ytp-spinner-circle"></div>
+                        </div>
+                        <div class="ytp-spinner-right">
+                            <div class="ytp-spinner-circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--====== PRELOADER PART ENDS ======-->
+
+    <!--====== HEADER PART START ======-->
+
+    <header class="header-area">
+        <div class="navbar-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <nav class="navbar navbar-expand-lg">
+                            <a class="navbar-brand" href="index.html">
+                                <img src="assets/images/VJFooter.png" alt="Logo">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                                <ul id="nav" class="navbar-nav ml-auto">
+                                    <li class="nav-item active">
+                                        <a class="page-scroll" href="WeeklyQuiz.html">Weekly Quiz</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="DinoReskin.html">Nil Sign Internet</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="WhackAMole.html">Whack The Virus</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="page-scroll" href="CandyCrush.html">(W)Hoose Hero</a>
+                                    </li>
+
+                                </ul>
+                            </div> <!-- navbar collapse -->
+
+
+                        </nav> <!-- navbar -->
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- container -->
+        </div> <!-- navbar area -->
+
+        <div id="home" class="header-hero bg_cover" style="background-image: url(assets/images/banner-bg.png)">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="header-hero-content text-center">
+
+                            <h2 class="header-title wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.5s">(W)Hoose Hero</h2>
+                            <p class="text wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.8s">Play a Candy Crush type game and meet our Hoose Mascots! <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></p> <!-- DONT DELETE THE BR STUFF OK those are like a dirty fix for some alignment issues I had and they need to stay-->
+
+                        </div> <!-- header hero content -->
+                    </div>
+                </div> <!-- row -->
+
+            </div> <!-- container -->
+            <div id="particles-1" class="particles"></div>
+        </div> <!-- header hero -->
+    </header>
+
+    <!--====== HEADER PART ENDS ======-->
+
+
+
+
+    <!-- Game goes under here, along with any other extra text or explanation you want to address to them. I have included one "about" section with text and a link and an image for you to use to edit if it makes it easier, if you don't want to you can just delete that-->
+            <!--====== ABOUT PART START ======-->
+
+
+
+
+    <!--====== ABOUT PART ENDS ======-->
+
+<object>
+
+  <div class="container">
+    <div class="column">
+      <div class="col-md-3 d-flex flex-column align-self-center" id="firstColumn">
+        <div class="p-2 text-center"><button class="btn newGameBtn" id="newGame">New Game</button> <button class="btn helpBtn" id="helpBtn">Show Help</button></div> 
+        <div class = "row" style="width:500px">
+          <div class = "column">
+            <div class="p-2 text-center"><h3>Score</h3></div>
+          </div>
+          <div class = "column">
+            <div class="p-2 text-center" id='score'></div>
+          </div>
+          <div class = "column">
+            <div class="p-2 text-center"><h3>Time Left</h3></div>
+          </div>
+          <div class = "column">
+
+
+            <div class="p-2 text-center" id='timeCount'><h3>Time Left</h3></div>
+            <script language ='javascript'>
+              var timeLeft = 20;
+              var t = 0
+              t = setInterval(function(){
+              document.getElementById('timeCount').innerHTML = timeLeft;
+              timeLeft -= 1
+              if (timeLeft < 0) {
+               clearInterval(t)
+               }
+              },1000);
+   
+             </script>
+            
+          </div>
+        </div>
+
+
+
+          
+         
+          
+           
+
+
+
+
+
+
+      </div>
+
+      <div class="col-md-6 d-flex flex-column mx-auto align-self-center" id="mainColumn" style='position:relative'>
+        <script language ="javascript"> rules.prepareNewGame();</script>
+        <!-- <canvas class ="d-flex-column mx-auto align-self-center" id ='Canvas' width='320' height='320' style ='border:2px solid #d3d3d3; width:320px;height:320px; z-index:-1;' > -->
+        <canvas class ="d-flex-column align-self-center" id ='Canvas' width='480' height='480' style:'z-index:-1; position:absolute;'>
+          <img id ='blue-candy'  src ='assets/graphics/blue-candy.png'>
+          <img id ='green-candy'  src ='assets/graphics/green-candy.png'>
+          <img id ='orange-candy'  src ='assets/graphics/orange-candy.png'>
+          <img id ='red-candy'  src ='assets/graphics/red-candy.png'>
+          <img id ='purple-candy'  src ='assets/graphics/purple-candy.png'>
+          <img id ='yellow-candy'  src ='assets/graphics/yellow-candy.png'>
+          <canvas  id ='candyCanvas1' width='480' height='480' style='z-index:40;  position:absolute;'></canvas>
+          <canvas class ="d-flex-column align-self-center" id ='candyCanvas2' width='400' height='400' style='z-index:80'></canvas>
+
+        </canvas>
+        <script>drawBoard();</script>
+        <script language ='javascript'>board.resetScore();</script>
+        <p class="mx-auto" id="invalid">Invalid Move!</p>
+
+        <!-- <script>
+          window.onload = function(){
+            var canvas = document.getElementById("Canvas");
+            var ctx = canvas.getContext("2d");
+            var img = document.getElementById("blue-candy");
+            ctx.drawImage(img,200,10);
+          }
+        </script>  -->
+        <!-- <script type="text/javascript">$("#mainColumn").html(colorTable());</script> -->
+        <!-- <script type ="text/javascript"> $("#mainColumn").html(drawBoard());</script> -->
+       
+      </div>
+
+
+
+      <div class="col-md-3 d-flex flex-column align-self-center" id="lastColumn">
+        <div class="p-2 text-center">
+          <h2 class="">Time Left</h2>
+          <input type="text" id="inputBox">
+        </div>
+
+        <div class="p-2 text-center modP">
+          <button class="btn btnColor" id="up" disabled>&uarr;</button>
+        </div>
+
+        <div class="p-2 text-center modP">
+          <button class="btn btnColor" id="left" style="margin-right: 20px;" disabled>&larr;</button>
+          <button class="btn btnColor" id="right"style="margin-left: 20px;" disabled>&rarr;</button>
+        </div>
+
+        <div class="p-2 text-center modP">
+          <button class="btn btnColor" id="down" disabled>&darr;</button>
+        </div>
+        <div class="p-2 text-center">
+          <button class="btn btnColor"id="crusher" disabled style= 'display: none'>Crush Once</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</object>
+
+
+    <!-- Game ends here-->
+
+        <!--====== Filter PART START ======-->
+    
+        <section id="about" class="about-area pt-70">
+          <div class="container">
+              <div class="row">
+                  <div class="col-lg-6">
+                      <div class="about-content mt-50 wow fadeInLeftBig" data-wow-duration="1s" data-wow-delay="0.5s">
+                          <div class="section-title">
+                              <div class="line"></div>
+                              <h3 class="title">Hoose IG Filter <br><span> Find out which Hoose YOU are in!</span></h3>
+                          </div> <!-- section title -->
+                          <p class="text">Visit us @thevictorianverve and try out our Hoose filter to find out which of the 6 Hoose mascots is YOUR spirit animal! Share and tag us @thevictorianverve! Filters can be accessed there too.</p>
+                          <a href="https://www.instagram.com/thevictorianverve/?hl=en" class="main-btn">Try Now</a>
+                      </div> <!-- about content -->
+                  </div>
+                  <div class="col-lg-6">
+                      <div class="about-image text-center mt-50 wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="0.5s">
+                          <img src="assets/images/FilterHoose.png" alt="FilterHoose">
+                      </div> <!-- about image -->
+                  </div>
+              </div> <!-- row -->
+          </div> <!-- container -->
+  
+      </section>
+      
+      <!--====== Filter PART ENDS ======-->
+
+      <!--====== Mascots1 PART START ======-->
+    
+    <section class="about-area pt-70">
+
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-6 order-lg-last">
+                  <div class="about-content mt-50 wow fadeInLeftBig" data-wow-duration="1s" data-wow-delay="0.5s">
+                      <div class="section-title">
+                          <div class="line"></div>
+                          <h3 class="title">Nice to meet you!<span> </span></h3>
+                      </div> <!-- section title -->
+                      <p class="text">Meet three of our adorable Hoose mascots! Draco, Aquila, and Lynx are just raring to meet you!</p>
+             </div> <!-- about content -->
+              </div>
+              <div class="col-lg-6 order-lg-first">
+                  <div class="about-image text-center mt-50 wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="0.5s">
+                      <img src="assets/images/Mascots1.png" alt="Mascots1">
+                  </div> <!-- about image -->
+              </div>
+          </div> <!-- row -->
+      </div> <!-- container -->
+  </section>
+  
+  <!--====== Mascots1 PART ENDS ======-->
+
+
+
+    <!--====== Mascots2 PART START ======-->
+    
+    <section id="about" class="about-area pt-70">
+      <div class="container">
+          <div class="row">
+              <div class="col-lg-6">
+                  <div class="about-content mt-50 wow fadeInLeftBig" data-wow-duration="1s" data-wow-delay="0.5s">
+                      <div class="section-title">
+                          <div class="line"></div>
+                          <h3 class="title">Our Hoose Mascots!<span> </span></h3>
+                      </div> <!-- section title -->
+                      <p class="text">These are but some of our Hoose Mascots. Their names are Pheonix, Ursa, and Pegasus!</p>
+                      <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+                  </div> <!-- about content -->
+              </div>
+              <div class="col-lg-6">
+                  <div class="about-image text-center mt-50 wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="0.5s">
+                      <img src="assets/images/Mascots2.png" alt="Mascots2">
+                  </div> <!-- about image -->
+              </div>
+          </div> <!-- row -->
+      </div> <!-- container -->
+
+  </section>
+  
+  <!--====== Mascots2 PART ENDS ======-->
+
+    <!--====== FOOTER PART START ======-->
+
+    <footer id="footer" class="footer-area pt-120">
+        <div class="container">
+
+            <div class="footer-widget pb-100">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-8">
+                        <div class="footer-about mt-50 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s">
+                            <a class="logo" href="#">
+                                <img src="assets/images/VJFooter.png" alt="logo">
+                            </a>
+                            <p class="text">We are Victoria Junior College's Robotics and Makers Club (VRMC). This website and the games included is a collaborative effort of those in VRMC's Programming Spec.  </p>
+
+
+                            </ul>
+                        </div> <!-- footer about -->
+                    </div>
+                    <div class="col-lg-5 col-md-7 col-sm-7">
+                        <div class="footer-link d-flex mt-50 justify-content-md-between">
+                            <div class="link-wrapper wow fadeIn" data-wow-duration="1s" data-wow-delay="0.4s">
+                                <div class="footer-title">
+                                    <h4 class="title"></h4>
+                                </div>
+                                <ul class="link">
+                                    <li><a href="#"></a></li>
+                                </ul>
+                            </div> <!-- footer wrapper -->
+                            <div class="link-wrapper wow fadeIn" data-wow-duration="1s" data-wow-delay="0.6s">
+                                <div class="footer-title">
+                                    <h4 class="title">(W)Hoose Hero <br> contributors</h4>
+                                </div>
+                                <ul class="link">
+                                    <li><a href="#">Isaac Teo<br>Bondugula Srikar<br>Xu Yu<br>Neya Praveen</a></li>
+                                </ul>
+                            </div> <!-- footer wrapper -->
+                        </div> <!-- footer link -->
+                    </div>
+                    <div class="col-lg-3 col-md-5 col-sm-5">
+                        <div class="footer-contact mt-50 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.8s">
+                            <div class="footer-title">
+                                <h4 class="title">Contact Us</h4>
+                            </div>
+                            <ul class="contact">
+                                <li>chindam.akash.2020@vjc.sg</li>
+                                <li>20 Marine Vista, Singapore 449035</li>
+                            </ul>
+                        </div> <!-- footer contact -->
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- footer widget -->
+            <div class="footer-copyright">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="copyright d-sm-flex justify-content-between">
+                            <div class="copyright-content">
+                                <p class="text">Designed and Developed by VRMC's <a href="https://go.vjc.sg/about/#resources" rel="nofollow">Programming Spec</a></p>
+                            </div> <!-- copyright content -->
+                        </div> <!-- copyright -->
+                    </div>
+                </div> <!-- row -->
+            </div> <!-- footer copyright -->
+        </div> <!-- container -->
+        <div id="particles-2"></div>
+    </footer>
+
+    <!--====== FOOTER PART ENDS ======-->
+
+    <!--====== BACK TOP TOP PART START ======-->
+
+    <a href="#" class="back-to-top"><i class="lni lni-chevron-up"></i></a>
+
+    <!--====== BACK TOP TOP PART ENDS ======-->
+
+    <!--====== PART START ======-->
+
+<!--
+    <section class="">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-"></div>
+            </div>
+        </div>
+    </section>
+-->
+
+    <!--====== PART ENDS ======-->
+
+
+
+
+    <!--====== Jquery js ======-->
+    <script src="assets/js/vendor/modernizr-3.7.1.min.js"></script>
+
+    <!--====== Bootstrap js ======-->
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap-4.5.0.min.js"></script>
+
+    <!--====== Plugins js ======-->
+    <script src="assets/js/plugins.js"></script>
+
+    <!--====== Counter Up js ======-->
+    <script src="assets/js/waypoints.min.js"></script>
+    <script src="assets/js/jquery.counterup.min.js"></script>
+
+
+
+    <!--====== Scrolling Nav js ======-->
+    <script src="assets/js/jquery.easing.min.js"></script>
+    <script src="assets/js/scrolling-nav.js"></script>
+
+    <!--====== wow js ======-->
+    <script src="assets/js/wow.min.js"></script>
+
+    <!--====== Particles js ======-->
+    <script src="assets/js/particles.min.js"></script>
+
+    <!--====== Main js ======-->
+    <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

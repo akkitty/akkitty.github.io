@@ -1,0 +1,97 @@
+/* Copyright (c) 2017 MIT 6.813/6.831 course staff, all rights reserved.
+ * Redistribution of original or derived work requires permission of course staff.
+ */
+
+.background {
+  background-color: red;
+}
+
+#mainColumn {
+  margin-top: 10px;
+  height: 650px;
+  width: 600px;
+    /* border: 2px solid black; */
+}
+
+#firstColumn {
+  color: red;
+  margin: auto;
+}
+
+#lastColumn{
+  margin-left: auto;
+  margin-right: auto;
+  visibility: hidden;
+}
+
+#invalid {
+  visibility: hidden;
+  color: red;
+  font-size: 2em;
+  font-weight: bolder;
+}
+/* #lastColumn .p-2 h2 {
+  display: inline-block;
+
+} */
+
+.tableBorder {
+   border: 2px solid lightgrey; 
+
+}
+
+#score{
+  color:whitesmoke;
+  background-color: lightsalmon;
+}
+#timeCount{
+  color:whitesmoke;
+  background-color: lightsalmon;
+}
+
+
+#inputBox {
+  width: 100px;
+  display: inline-block;
+}
+
+#lastColumn h2 {
+  display: inline-block;
+}
+
+.btn:disabled {
+  background-color: lightgrey;
+  color: black;
+}
+
+.btn {
+  color: black;
+  background-color: lightgreen;
+}
+
+.padCell {
+  padding: 5px 9px;
+  height: 60px;
+  width: 60px;
+}
+
+.newGameBtn {
+  background-color: lightgrey;
+  color: black;
+}
+
+.modP {
+  margin: -10px;
+}
+
+.helpBtn {
+  background-color: lavender;
+}
+
+
+
+/* Additional Timer Function */
+
+#time {
+  margin: auto;
+}
