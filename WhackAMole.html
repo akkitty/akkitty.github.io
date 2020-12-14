@@ -121,9 +121,10 @@
     
     <!--====== HEADER PART ENDS ======-->
     
-    <h1>Whack-the-virus! <span class="score">0</span></h1>
-  <button onClick="startGame()">Start!</button>
-
+    <h1>Whack-the-virus!</h1>
+  <div class="row justify-content-center">
+    <input type="image" src="assets/images/startbutton.png"  onClick="startGame()"/> <h1> Score:<span class="score">0</span></h1>
+</div> 
   <div class="game">
     <div class="hole hole1">
       <div class="mole"></div>
@@ -145,7 +146,33 @@
     </div>
   </div>
 <!-- partial -->
-  <script  src="whackamole/dist/script.js"></script>       
+  <script  src="whackamole/dist/script.js"></script> 
+  
+      <!--====== submitscore PART START ======-->
+    
+      <section id="about" class="about-area pt-70">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="about-content mt-50 wow fadeInLeftBig" data-wow-duration="1s" data-wow-delay="0.5s">
+                        <div class="section-title">
+                            <div class="line"></div>
+                            <h3 class="title">Submit your score!<span> </span></h3>
+                        </div> <!-- section title -->
+                        <p class="text">Submit a screenshot of your score here to stand a chance to win a Starbucks gift card!</p>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc3t1aLRZy-HC-W0JTgCzzBiSBt4Go4glPqXH00a1CuVPPBXQ/viewform?usp=sf_link" class="main-btn">Submit Here</a>
+                    </div> <!-- about content -->
+                </div>
+                <div class="col-lg-6">
+                    <div class="about-image text-center mt-50 wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="0.5s">
+                        <img src="assets/images/submitscore.png" alt="submitscore">
+                    </div> <!-- about image -->
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+  
+    </section>
+    <!--====== submitscore PART ENDS ======-->
    <!--====== ABOUT PART START ======-->
     
     <section class="about-area pt-70">
@@ -159,7 +186,6 @@
                             <h3 class="title">something about virus or the game <span> Short explanation</span></h3>
                         </div> <!-- section title -->
                         <p class="text">More explanation and stuff</p>
-                        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                     </div> <!-- about content -->
                 </div>
                 <div class="col-lg-6 order-lg-first">
@@ -173,6 +199,7 @@
     
     <!--====== ABOUT PART ENDS ======-->
 
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
     <!-- Game ends here-->
 
     <!--====== FOOTER PART START ======-->
@@ -208,7 +235,7 @@
                                     <h4 class="title">Whack The Virus <br> contributors</h4>
                                 </div>
                                 <ul class="link">
-                                    <li><a href="#">Emmanuel <br>add more names</a></li>
+                                    <li><a href="#">Emmanuel Ng<br>Ji Shengqi<br>K. Srivarshini </a></li>
                                 </ul>
                             </div> <!-- footer wrapper -->
                         </div> <!-- footer link -->
