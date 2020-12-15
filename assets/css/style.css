@@ -751,8 +751,7 @@ p {
 .sticky .navbar-nav .nav-item a {
   color: #2E2E2E; }
 
-.sticky .navbar-nav .nav-item.active > a, .sticky .navbar-nav .nav-item:hover > a {
-  color: #c11c1c; }
+
 
 /*===== HEADER HERO =====*/
 .header-hero {
