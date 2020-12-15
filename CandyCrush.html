@@ -51,6 +51,8 @@
     <script src="assets/CandyCrush/table.js"></script>
     <script>
 
+      
+
     // By default, the first board loaded by your page will be the same
     // each time you load (which is accomplished by "seeding" the random
     // number generator. This makes testing (and grading!) easier!
@@ -855,7 +857,27 @@
 
     </script>
 
-
+    <!-- Mobile instructions-->
+    <style type="text/css">
+      .mobileShow {display: none;}
+    
+      /* Smartphone Portrait and Landscape */
+      @media only screen
+        and (min-device-width : 320px)
+        and (max-device-width : 480px){ 
+          .mobileShow {display: inline;}
+      }
+    </style>
+  <style type="text/css">
+      .mobileHide { display: inline; }
+    
+      /* Smartphone Portrait and Landscape */
+      @media only screen
+        and (min-device-width : 320px)
+        and (max-device-width : 480px){
+         .mobileHide { display: none;}
+      }
+    </style>
 
 </head>
 
