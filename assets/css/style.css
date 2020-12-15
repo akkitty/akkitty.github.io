@@ -1228,6 +1228,11 @@ p {
   height: 100%;
   z-index: -1; }
 
+.instructiontext {
+margin:auto;
+width: 400px;
+}
+
 .footer-widget {
   padding-top: 50px; }
 
