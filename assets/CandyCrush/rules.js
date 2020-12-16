@@ -58,7 +58,7 @@ var Rules = function(board)
     var countDown = setTimeout(function(){
       timeUp = true;
       endGame()
-    },20000)
+    },30000)
     startCountdown()
 
 
@@ -483,7 +483,7 @@ var Rules = function(board)
 
 //Countdown procedure
   function startCountdown() {
-    this.timeCount = 20
+    this.timeCount = 30
     seconds = setInterval(function(){
       this.timeCount -= 1
       console.log(this.timeCount)
