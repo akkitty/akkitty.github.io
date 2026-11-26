@@ -1,0 +1,5 @@
+# Never commit your session cookie or scraped data
+cookie.txt
+.env
+data/
+__pycache__/
